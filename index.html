@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0f3d2e">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Fitopatologías Aguacate">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f951.png">
+<link rel="apple-touch-icon" href="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/72x72/1f951.png">
+<title>Fitopatologías Aguacate | Sistema Profesional</title>
+<style>
+  :root {
+    --bg: #f1f5f3;
+    --card: #ffffff;
+    --primary: #0f3d2e;
+    --primary-light: #1a5c45;
+    --accent: #0d9488;
+    --accent-dark: #0f766e;
+    --text: #1e293b;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --danger: #dc2626;
+    --success: #059669;
+    --radius: 16px;
+    --shadow: 0 4px 24px rgba(15, 61, 46, 0.07);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; line-height: 1.5; }
+
+  #login-screen { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; background: linear-gradient(165deg, #0b1f17 0%, #0f3d2e 50%, #134e3a 100%); }
+  .login-card { background: var(--card); width: 100%; max-width: 440px; border-radius: 24px; padding: 36px 28px; box-shadow: 0 25px 60px rgba(0,0,0,0.28); }
+  .login-logo { text-align: center; margin-bottom: 28px; }
+  .login-logo .icon { font-size: 52px; margin-bottom: 6px; }
+  .login-logo h1 { font-size: 1.5rem; font-weight: 800; color: var(--primary); }
+  .login-logo p { font-size: 0.84rem; color: var(--muted); margin-top: 4px; }
+
+  .form-group { margin-bottom: 15px; }
+  .form-group label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; }
+  .form-group input, .form-group textarea { width: 100%; padding: 13px 14px; border: 1.5px solid var(--border); border-radius: 12px; font-size: 0.95rem; outline: none; }
+  .form-group input:focus, .form-group textarea:focus { border-color: var(--accent); }
+
+  .btn { display: block; width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 0.95rem; font-weight: 700; cursor: pointer; }
+  .btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; }
+  .btn-accent { background: linear-gradient(135deg, var(--accent), var(--accent-dark)); color: white; }
+  .btn-danger { background: #fef2f2; color: var(--danger); border: 1px solid #fecaca; }
+  .btn-outline { background: #f8fafc; color: var(--text); border: 1.5px solid var(--border); }
+  .btn-sm { padding: 8px 12px; font-size: 0.8rem; width: auto; display: inline-block; }
+
+  .switch-auth { text-align: center; margin-top: 20px; font-size: 0.88rem; color: var(--muted); }
+  .switch-auth span { color: var(--accent); font-weight: 700; cursor: pointer; }
+  .msg { font-size: 0.85rem; text-align: center; padding: 11px; border-radius: 10px; margin-top: 12px; display: none; }
+  .msg.error { background: #fef2f2; color: var(--danger); }
+  .msg.success { background: #ecfdf5; color: var(--success); }
+  .hidden { display: none !important; }
+
+  #app-screen { display: none; padding-bottom: 92px; }
+  .topbar { background: linear-gradient(135deg, #0b1f17, #0f3d2e); color: white; padding: 18px 20px 15px; position: sticky; top: 0; z-index: 50; }
+  .topbar h1 { font-size: 1.18rem; font-weight: 800; }
+  .topbar p { font-size: 0.74rem; opacity: 0.75; margin-top: 2px; }
+  .user-bar { background: var(--primary-light); color: white; padding: 10px 20px; font-size: 0.82rem; display: flex; justify-content: space-between; align-items: center; }
+  .user-bar button { background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 5px 12px; border-radius: 8px; font-size: 0.75rem; cursor: pointer; }
+
+  .content { padding: 18px 16px; max-width: 680px; margin: 0 auto; }
+  .card { background: var(--card); border-radius: var(--radius); padding: 22px; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+  .card-title { font-size: 1.12rem; font-weight: 800; color: var(--primary); margin-bottom: 3px; }
+  .card-sub { font-size: 0.84rem; color: var(--muted); margin-bottom: 16px; }
+
+  .variedad-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 14px 0; }
+  .var-btn { padding: 14px 6px; border: 2px solid var(--border); border-radius: 14px; background: #f8fafc; text-align: center; cursor: pointer; font-weight: 700; font-size: 0.8rem; }
+  .var-btn span { display: block; font-size: 1.55rem; margin-bottom: 3px; }
+  .var-btn.selected { background: var(--primary); color: white; border-color: var(--primary); }
+
+  #preview { width: 100%; max-height: 230px; object-fit: contain; border-radius: 14px; margin: 12px 0; display: none; background: #f1f5f9; border: 2px dashed var(--border); }
+  .btn-row { display: flex; gap: 10px; margin-bottom: 12px; }
+  .btn-row .btn { flex: 1; margin-bottom: 0; background: #f1f5f9; color: var(--primary); border: 1.5px solid var(--border); }
+
+  .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 16px; }
+  .stat-box { background: #f0fdf4; border-radius: 12px; padding: 12px; text-align: center; border: 1px solid #bbf7d0; }
+  .stat-box .num { font-size: 1.4rem; font-weight: 800; color: var(--primary); }
+  .stat-box .label { font-size: 0.72rem; color: var(--muted); }
+
+  .filter-row { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+  .filter-btn { padding: 7px 14px; border-radius: 20px; border: 1.5px solid var(--border); background: white; font-size: 0.78rem; font-weight: 600; cursor: pointer; color: var(--muted); }
+  .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+  .gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(155px, 1fr)); gap: 12px; }
+  .gallery-item { background: #f8fafc; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); }
+  .gallery-item img { width: 100%; height: 115px; object-fit: cover; cursor: pointer; }
+  .gallery-info { padding: 10px; font-size: 0.76rem; }
+  .gallery-info strong { color: var(--primary); display: block; margin-bottom: 2px; }
+  .gallery-actions { display: flex; gap: 6px; margin-top: 8px; }
+
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 200; display: none; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.show { display: flex; }
+  .modal { background: white; border-radius: 20px; max-width: 420px; width: 100%; max-height: 90vh; overflow-y: auto; padding: 24px; }
+  .modal img { width: 100%; border-radius: 12px; margin-bottom: 14px; }
+
+  .search-box { margin-bottom: 14px; }
+  .plaga-item { border: 1px solid var(--border); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
+  .plaga-header { padding: 13px 14px; background: #f8fafc; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+  .plaga-header strong { font-size: 0.86rem; }
+  .plaga-body { display: none; padding: 13px 14px; font-size: 0.84rem; background: white; border-top: 1px solid var(--border); }
+  .plaga-body p { margin-bottom: 7px; }
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 0.68rem; font-weight: 700; color: white; }
+
+  .profile-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 0.9rem; }
+  .profile-row span:first-child { color: var(--muted); }
+
+  .nav { position: fixed; bottom: 0; left: 0; right: 0; background: white; display: flex; border-top: 1px solid var(--border); z-index: 100; box-shadow: 0 -4px 24px rgba(0,0,0,0.06); }
+  .nav-item { flex: 1; text-align: center; padding: 10px 2px 11px; font-size: 0.66rem; color: var(--muted); border: none; background: none; cursor: pointer; }
+  .nav-item.active { color: var(--primary); font-weight: 700; }
+  .nav-item span { display: block; font-size: 1.3rem; margin-bottom: 2px; }
+
+  .page { display: none; }
+  .page.active { display: block; }
+  .info-box { background: #ecfdf5; border-left: 4px solid var(--accent); border-radius: 10px; padding: 12px 14px; font-size: 0.84rem; margin-bottom: 14px; color: #065f46; }
+  .empty-state { text-align: center; padding: 36px 16px; color: var(--muted); }
+  .empty-state span { font-size: 2.4rem; display: block; margin-bottom: 10px; }
+  .variedad-activa { background: linear-gradient(135deg, #ecfdf5, #d1fae5); border: 2px solid #6ee7b7; border-radius: 16px; padding: 18px; margin-bottom: 18px; }
+  .variedad-activa h3 { color: var(--primary); margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-logo">
+      <div class="icon">🥑</div>
+      <h1>Fitopatologías Aguacate</h1>
+      <p>Sistema Profesional de Diagnóstico Fitosanitario</p>
+    </div>
+    <div id="form-login">
+      <div class="form-group"><label>Correo electrónico</label><input type="email" id="login-email" placeholder="tu@correo.com"></div>
+      <div class="form-group"><label>Contraseña</label><input type="password" id="login-password" placeholder="••••••••"></div>
+      <button class="btn btn-primary" onclick="iniciarSesion()">Iniciar sesión</button>
+      <div class="msg error" id="login-error"></div>
+      <div class="switch-auth">¿No tienes cuenta? <span onclick="mostrarRegistro()">Crear cuenta</span></div>
+    </div>
+    <div id="form-registro" class="hidden">
+      <div class="form-group"><label>Nombre</label><input type="text" id="reg-nombre" placeholder="Tu nombre"></div>
+      <div class="form-group"><label>Apellido</label><input type="text" id="reg-apellido" placeholder="Tu apellido"></div>
+      <div class="form-group"><label>Correo electrónico</label><input type="email" id="reg-email" placeholder="tu@correo.com"></div>
+      <div class="form-group"><label>Teléfono / Celular</label><input type="tel" id="reg-telefono" placeholder="300 123 4567"></div>
+      <div class="form-group"><label>Nombre de la finca / Ubicación</label><input type="text" id="reg-finca" placeholder="Ej: Finca El Roble - Caldas"></div>
+      <div class="form-group"><label>Contraseña</label><input type="password" id="reg-password" placeholder="Mínimo 6 caracteres"></div>
+      <div class="form-group"><label>Confirmar contraseña</label><input type="password" id="reg-password2" placeholder="Repite la contraseña"></div>
+      <button class="btn btn-primary" onclick="crearCuenta()">Crear cuenta</button>
+      <div class="msg error" id="reg-error"></div>
+      <div class="msg success" id="reg-success"></div>
+      <div class="switch-auth">¿Ya tienes cuenta? <span onclick="mostrarLogin()">Iniciar sesión</span></div>
+    </div>
+  </div>
+</div>
+
+<div id="app-screen">
+  <div class="topbar">
+    <h1>🥑 Fitopatologías Aguacate</h1>
+    <p>Diagnóstico Profesional • AGROSAVIA / ICA</p>
+  </div>
+  <div class="user-bar">
+    <span id="nombre-usuario">Usuario</span>
+    <button onclick="cerrarSesion()">Cerrar sesión</button>
+  </div>
+
+  <div class="content">
+    <div id="page-diagnostico" class="page active">
+      <div class="card">
+        <div class="card-title">Nuevo Diagnóstico</div>
+        <div class="card-sub">Registra una observación de campo</div>
+        <div class="info-box">Selecciona la variedad, toma una fotografía y agrega notas. Al guardar se actualizará automáticamente la información de esa variedad.</div>
+
+        <div style="font-weight:700;font-size:0.88rem;margin-bottom:6px;color:var(--primary)">Variedad del fruto</div>
+        <div class="variedad-grid">
+          <button class="var-btn" id="btn-hass" onclick="seleccionarVariedad('hass')"><span>🥑</span>Hass</button>
+          <button class="var-btn" id="btn-criollo" onclick="seleccionarVariedad('criollo')"><span>🟢</span>Criollo</button>
+          <button class="var-btn" id="btn-papelillo" onclick="seleccionarVariedad('papelillo')"><span>✨</span>Papelillo</button>
+        </div>
+        <div id="variedad-texto" style="text-align:center;font-size:0.8rem;color:var(--muted);margin-bottom:12px">Ninguna variedad seleccionada</div>
+
+        <img id="preview" alt="Vista previa">
+        <div class="btn-row">
+          <button class="btn" onclick="document.getElementById('input-galeria').click()">📁 Galería</button>
+          <button class="btn" onclick="document.getElementById('input-camara').click()">📷 Cámara</button>
+        </div>
+        <input type="file" id="input-galeria" accept="image/*" class="hidden" onchange="cargarImagen(event)">
+        <input type="file" id="input-camara" accept="image/*" capture="environment" class="hidden" onchange="cargarImagen(event)">
+
+        <div class="form-group" style="margin-top:12px">
+          <label>Notas / Observaciones de campo</label>
+          <textarea id="notas" rows="3" placeholder="Describe síntomas, ubicación en el árbol, severidad..."></textarea>
+        </div>
+
+        <button class="btn btn-accent" style="margin-bottom:8px" onclick="obtenerGPS()">📍 Capturar ubicación GPS</button>
+        <div id="gps-text" style="text-align:center;font-size:0.8rem;color:var(--muted);margin-bottom:14px">Ubicación no capturada</div>
+        <button class="btn btn-primary" onclick="guardarDiagnostico()">💾 Guardar Diagnóstico</button>
+      </div>
+    </div>
+
+    <div id="page-galeria" class="page">
+      <div class="card">
+        <div class="card-title">Galería de Diagnósticos</div>
+        <div class="card-sub">Registros guardados en este dispositivo</div>
+        <div class="stats-row" id="stats-row"></div>
+        <div class="filter-row">
+          <button class="filter-btn active" onclick="filtrarGaleria('todos')">Todos</button>
+          <button class="filter-btn" onclick="filtrarGaleria('hass')">Hass</button>
+          <button class="filter-btn" onclick="filtrarGaleria('criollo')">Criollo</button>
+          <button class="filter-btn" onclick="filtrarGaleria('papelillo')">Papelillo</button>
+        </div>
+        <div id="galeria-contenido"></div>
+      </div>
+    </div>
+
+    <div id="page-historia" class="page">
+      <div class="card">
+        <div class="card-title">Información de la Variedad</div>
+        <div class="card-sub">Se actualiza automáticamente al guardar un diagnóstico</div>
+        <div id="contenido-historia">
+          <div class="empty-state">
+            <span>📖</span>
+            <p>Realiza un diagnóstico para ver aquí la información completa de la variedad registrada.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="page-catalogo" class="page">
+      <div class="card">
+        <div class="card-title">Catálogo de Fitopatologías</div>
+        <div class="card-sub">20 entidades • AGROSAVIA / ICA Colombia</div>
+        <div class="search-box">
+          <input type="text" id="buscar-plaga" placeholder="Buscar plaga o enfermedad..." oninput="filtrarCatalogo()">
+        </div>
+        <div id="lista-plagas"></div>
+      </div>
+    </div>
+
+    <div id="page-perfil" class="page">
+      <div class="card">
+        <div class="card-title">Mi Perfil</div>
+        <div id="perfil-contenido"></div>
+        <button class="btn btn-danger" style="margin-top:20px" onclick="borrarTodosDatos()">🗑️ Borrar todos mis datos</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="nav">
+    <button class="nav-item active" onclick="mostrarPagina('diagnostico')"><span>📝</span>Diagnóstico</button>
+    <button class="nav-item" onclick="mostrarPagina('galeria')"><span>🖼️</span>Galería</button>
+    <button class="nav-item" onclick="mostrarPagina('historia')"><span>📖</span>Variedad</button>
+    <button class="nav-item" onclick="mostrarPagina('catalogo')"><span>🧪</span>Catálogo</button>
+    <button class="nav-item" onclick="mostrarPagina('perfil')"><span>👤</span>Perfil</button>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div id="modal-contenido"></div>
+    <button class="btn btn-outline" style="margin-top:16px" onclick="cerrarModal()">Cerrar</button>
+  </div>
+</div>
+
+<script>
+// Registrar Service Worker para poder instalar la app
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js')
+      .then(reg => console.log('Service Worker registrado'))
+      .catch(err => console.log('Error SW:', err));
+  });
+}
+
+const PLAGAS = [
+  {nombre:"Heilipus lauri Boheman (Picudo grande de la semilla)",categoria:"Cuarentenaria",color:"#dc2626",variedades:["hass","criollo","papelillo"],sintomas:"La hembra perfora el fruto. La larva barrena hasta la semilla. Pérdidas > 60%.",cultural:"Inspección semanal. Destrucción de frutos afectados con cal.",biologico:"Beauveria bassiana y Metarhizium anisopliae.",quimico:"Insecticidas de baja toxicidad autorizados por el ICA."},
+  {nombre:"Stenoma catenifer (Polilla del aguacate)",categoria:"Cuarentenaria",color:"#dc2626",variedades:["hass","criollo","papelillo"],sintomas:"Orificios con aserrín fino. Larvas de dorso morado.",cultural:"Poda y destrucción de frutos caídos.",biologico:"Bacillus thuringiensis y Beauveria.",quimico:"Moléculas selectivas al inicio de brotaciones."},
+  {nombre:"Heilipus trifasciatus (Picudo del criollo)",categoria:"Cuarentenaria",color:"#dc2626",variedades:["criollo"],sintomas:"Daño en semilla y caída de frutos. Preferencia por raza antillana.",cultural:"Recolección y destrucción de frutos infestados.",biologico:"Beauveria bassiana.",quimico:"Aplicaciones focalizadas autorizadas."},
+  {nombre:"Phytophthora cinnamomi (Pudrición radical)",categoria:"Fitopatología",color:"#7c3aed",variedades:["hass","criollo","papelillo"],sintomas:"Marchitez, clorosis, defoliación y raíces necróticas.",cultural:"Buen drenaje y material certificado.",biologico:"Trichoderma harzianum + materia orgánica.",quimico:"Fosetil-Al o fosfitos de potasio."},
+  {nombre:"Colletotrichum gloeosporioides (Antracnosis)",categoria:"Fitopatología",color:"#7c3aed",variedades:["hass","criollo","papelillo"],sintomas:"Lesiones negras hundidas en frutos (poscosecha).",cultural:"Poda de aireación y cosecha oportuna.",biologico:"Trichoderma y Bacillus subtilis.",quimico:"Fungicidas cúpricos o triazoles."},
+  {nombre:"Sphaceloma perseae (Roña)",categoria:"Fitopatología",color:"#7c3aed",variedades:["hass","papelillo"],sintomas:"Lesiones corchosas rugosas de color café.",cultural:"Poda de ramas afectadas.",biologico:"Manejo de humedad + biofungicidas.",quimico:"Fungicidas cúpricos preventivos."},
+  {nombre:"Pseudocercospora purpurea (Mancha negra)",categoria:"Fitopatología",color:"#7c3aed",variedades:["hass","criollo","papelillo"],sintomas:"Manchas circulares púrpura a negro en hojas y frutos.",cultural:"Mejora de aireación.",biologico:"Biofungicidas.",quimico:"Fungicidas protectantes."},
+  {nombre:"Monalonion velezangeli (Chinche del aguacate)",categoria:"Importancia Económica",color:"#d97706",variedades:["hass","criollo","papelillo"],sintomas:"Manchas aceitosas necróticas y exudaciones de savia.",cultural:"Podas de apertura de copa.",biologico:"Beauveria y extractos de neem.",quimico:"Insecticidas autorizados por el ICA."},
+  {nombre:"Oligonychus yothersi (Arañita roja)",categoria:"Importancia Económica",color:"#d97706",variedades:["hass","criollo","papelillo"],sintomas:"Punteaduras cloróticas y bronceado de hojas.",cultural:"Monitoreo en lotes polvorientos.",biologico:"Aceites agrícolas y ácaros depredadores.",quimico:"Acaricidas específicos rotando ingredientes."},
+  {nombre:"Trips (Frankliniella / Scirtothrips)",categoria:"Importancia Económica",color:"#ea580c",variedades:["papelillo","criollo","hass"],sintomas:"Cicatrización corchosa en la epidermis del fruto.",cultural:"Control de malezas hospederas.",biologico:"Hongos entomopatógenos.",quimico:"Insecticidas específicos para trips."},
+  {nombre:"Fusarium spp. (Marchitez por Fusarium)",categoria:"Fitopatología",color:"#7c3aed",variedades:["hass","criollo","papelillo"],sintomas:"Amarillamiento unilateral, marchitez y decoloración vascular.",cultural:"Evitar encharcamientos y material sano.",biologico:"Trichoderma harzianum.",quimico:"Fungicidas sistémicos autorizados."},
+  {nombre:"Botryosphaeria spp. (Cancro y muerte regresiva)",categoria:"Fitopatología",color:"#7c3aed",variedades:["hass","papelillo"],sintomas:"Cancros en ramas, exudado de goma y muerte regresiva.",cultural:"Poda de ramas afectadas y desinfección de herramientas.",biologico:"Trichoderma en heridas de poda.",quimico:"Fungicidas cúpricos y triazoles."},
+  {nombre:"Verticillium dahliae (Verticilosis)",categoria:"Fitopatología",color:"#7c3aed",variedades:["hass","criollo"],sintomas:"Marchitez unilateral, clorosis y necrosis de hojas.",cultural:"Evitar suelos infectados.",biologico:"Solarización + Trichoderma.",quimico:"Limitado; priorizar manejo cultural."},
+  {nombre:"Phytophthora palmivora (Pudrición del fruto)",categoria:"Fitopatología",color:"#7c3aed",variedades:["hass","criollo","papelillo"],sintomas:"Pudrición blanda y oscura del fruto.",cultural:"Evitar contacto del fruto con el suelo.",biologico:"Trichoderma y Bacillus.",quimico:"Fungicidas a base de fosfitos o cobre."},
+  {nombre:"Lasiodiplodia theobromae (Pudrición del pedúnculo)",categoria:"Fitopatología",color:"#7c3aed",variedades:["hass","papelillo"],sintomas:"Pudrición que inicia en el pedúnculo.",cultural:"Cosecha cuidadosa y desinfección de herramientas.",biologico:"Trichoderma harzianum.",quimico:"Fungicidas sistémicos en poscosecha."},
+  {nombre:"Aphis gossypii / Toxoptera (Áfidos)",categoria:"Importancia Económica",color:"#d97706",variedades:["hass","criollo","papelillo"],sintomas:"Colonias en brotes tiernos y fumagina.",cultural:"Eliminación de malezas y brotes afectados.",biologico:"Coccinélidos y crisopas.",quimico:"Insecticidas selectivos."},
+  {nombre:"Aleurocanthus woglumi (Mosca prieta)",categoria:"Importancia Económica",color:"#d97706",variedades:["hass","criollo"],sintomas:"Ninfas negras en el envés de las hojas y fumagina.",cultural:"Poda de aireación.",biologico:"Parasitoides naturales (Encarsia).",quimico:"Aceites agrícolas y jabones."},
+  {nombre:"Amorbia cuneana (Tortricido)",categoria:"Importancia Económica",color:"#ea580c",variedades:["hass","papelillo"],sintomas:"Larvas que enrollan hojas y dañan frutos jóvenes.",cultural:"Poda y destrucción de hojas enrolladas.",biologico:"Bacillus thuringiensis.",quimico:"Insecticidas específicos en focos."},
+  {nombre:"Nectria / Fusarium solani (Cancro del tronco)",categoria:"Fitopatología",color:"#7c3aed",variedades:["hass","criollo"],sintomas:"Cancros en el tronco y cuello de la raíz.",cultural:"Evitar heridas mecánicas y mejorar drenaje.",biologico:"Trichoderma aplicado al suelo.",quimico:"Pastas fungicidas en heridas."},
+  {nombre:"Xyleborus / Euwallacea (Barrenadores)",categoria:"Importancia Económica",color:"#d97706",variedades:["hass","criollo","papelillo"],sintomas:"Orificios en ramas y tronco con aserrín fino.",cultural:"Eliminación de material infestado.",biologico:"Hongos entomopatógenos.",quimico:"Insecticidas sistémicos autorizados."}
+];
+
+const HISTORIAS = {
+  hass: {
+    titulo: "Aguacate cv. Hass",
+    subtitulo: "El cultivar de exportación más importante del mundo",
+    origen: "Originado en La Habra Heights, California (1926) por Rudolph Hass.",
+    historia: "Lidera las exportaciones colombianas. Zonas principales: Antioquia, Caldas, Risaralda, Quindío, Tolima y Valle del Cauca.",
+    rasgos: "Fruto ovoide a piriforme (150-400 g). Cáscara gruesa y rugosa que se torna morado-negro al madurar. Alto contenido de aceite (18-22%).",
+    susceptibilidad: "Sensible a Heilipus lauri, Stenoma catenifer, Phytophthora cinnamomi, Monalonion y arañita roja.",
+    usos: "Exportación en fresco, guacamole e industria de aceite.",
+    manejo: "Patrones tolerantes a Phytophthora, podas de formación y monitoreo de plagas cuarentenarias."
+  },
+  criollo: {
+    titulo: "Aguacate Criollo (Raza Antillana)",
+    subtitulo: "Patrimonio genético y patrón tradicional de Colombia",
+    origen: "Nativo de tierras bajas tropicales de Centroamérica y norte de Sudamérica.",
+    historia: "Base del consumo interno durante décadas. Usado ampliamente como patrón por su vigor.",
+    rasgos: "Fruto grande (300 g a más de 1 kg). Cáscara lisa y delgada, verde claro. Semilla grande.",
+    susceptibilidad: "Hospedador preferencial de Heilipus trifasciatus. También afectado por Trips y Monalonion.",
+    usos: "Consumo fresco nacional, jugos y como patrón para injertar Hass y Papelillo.",
+    manejo: "Control prioritario del picudo del criollo y podas de aclareo."
+  },
+  papelillo: {
+    titulo: "Aguacate Papelillo (cv. Lorena)",
+    subtitulo: "La variedad insignia del consumo nacional",
+    origen: "Selección desarrollada y popularizada en Colombia.",
+    historia: "Muy apreciada por su sabor suave, textura cremosa y alto rendimiento de pulpa.",
+    rasgos: "Fruto alargado a piriforme (400-900 g). Cáscara muy fina, lisa y brillante de color verde.",
+    susceptibilidad: "Muy sensible a Trips y Monalonion por su cáscara delgada. También a antracnosis.",
+    usos: "Principalmente mercado fresco nacional.",
+    manejo: "Control temprano de trips y chinches. Evitar heridas mecánicas."
+  }
+};
+
+let variedadSeleccionada = null;
+let imagenActual = null;
+let gpsData = null;
+let filtroActual = 'todos';
+let ultimaVariedadDiagnosticada = null;
+
+function mostrarRegistro() {
+  document.getElementById('form-login').classList.add('hidden');
+  document.getElementById('form-registro').classList.remove('hidden');
+}
+function mostrarLogin() {
+  document.getElementById('form-registro').classList.add('hidden');
+  document.getElementById('form-login').classList.remove('hidden');
+}
+
+function crearCuenta() {
+  const nombre = document.getElementById('reg-nombre').value.trim();
+  const apellido = document.getElementById('reg-apellido').value.trim();
+  const email = document.getElementById('reg-email').value.trim().toLowerCase();
+  const telefono = document.getElementById('reg-telefono').value.trim();
+  const finca = document.getElementById('reg-finca').value.trim();
+  const password = document.getElementById('reg-password').value;
+  const password2 = document.getElementById('reg-password2').value;
+  const error = document.getElementById('reg-error');
+  const success = document.getElementById('reg-success');
+  error.style.display = 'none'; success.style.display = 'none';
+
+  if (!nombre || !apellido || !email || !telefono || !finca || !password) {
+    error.textContent = 'Completa todos los campos'; error.style.display = 'block'; return;
+  }
+  if (password.length < 6) { error.textContent = 'La contraseña debe tener al menos 6 caracteres'; error.style.display = 'block'; return; }
+  if (password !== password2) { error.textContent = 'Las contraseñas no coinciden'; error.style.display = 'block'; return; }
+
+  let usuarios = JSON.parse(localStorage.getItem('usuarios_aguacate') || '[]');
+  if (usuarios.find(u => u.email === email)) { error.textContent = 'Este correo ya está registrado'; error.style.display = 'block'; return; }
+
+  usuarios.push({ nombre, apellido, email, telefono, finca, password, fechaRegistro: new Date().toISOString() });
+  localStorage.setItem('usuarios_aguacate', JSON.stringify(usuarios));
+
+  success.innerHTML = `✅ Cuenta creada correctamente.<br><small>Bienvenido/a <strong>${nombre} ${apellido}</strong>.</small>`;
+  success.style.display = 'block';
+  setTimeout(() => { mostrarLogin(); document.getElementById('login-email').value = email; }, 2000);
+}
+
+function iniciarSesion() {
+  const email = document.getElementById('login-email').value.trim().toLowerCase();
+  const password = document.getElementById('login-password').value;
+  const error = document.getElementById('login-error');
+  error.style.display = 'none';
+  if (!email || !password) { error.textContent = 'Ingresa correo y contraseña'; error.style.display = 'block'; return; }
+
+  const usuarios = JSON.parse(localStorage.getItem('usuarios_aguacate') || '[]');
+  const usuario = usuarios.find(u => u.email === email && u.password === password);
+  if (!usuario) { error.textContent = 'Correo o contraseña incorrectos'; error.style.display = 'block'; return; }
+
+  localStorage.setItem('sesion_aguacate', JSON.stringify(usuario));
+  entrarApp(usuario);
+}
+
+function cerrarSesion() {
+  localStorage.removeItem('sesion_aguacate');
+  document.getElementById('app-screen').style.display = 'none';
+  document.getElementById('login-screen').style.display = 'flex';
+}
+
+function entrarApp(usuario) {
+  document.getElementById('login-screen').style.display = 'none';
+  document.getElementById('app-screen').style.display = 'block';
+  document.getElementById('nombre-usuario').textContent = `👤 ${usuario.nombre} ${usuario.apellido}`;
+  cargarGaleria();
+  cargarCatalogo();
+  cargarPerfil(usuario);
+
+  const ultima = localStorage.getItem('ultima_variedad');
+  if (ultima) {
+    ultimaVariedadDiagnosticada = ultima;
+    actualizarHistoria(ultima);
+  }
+}
+
+window.onload = function() {
+  const s = localStorage.getItem('sesion_aguacate');
+  if (s) entrarApp(JSON.parse(s));
+};
+
+function mostrarPagina(nombre) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById('page-' + nombre).classList.add('active');
+  event.currentTarget.classList.add('active');
+  if (nombre === 'galeria') cargarGaleria();
+  if (nombre === 'historia' && ultimaVariedadDiagnosticada) actualizarHistoria(ultimaVariedadDiagnosticada);
+}
+
+function seleccionarVariedad(v) {
+  variedadSeleccionada = v;
+  document.querySelectorAll('.var-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('btn-' + v).classList.add('selected');
+  const nombres = { hass: 'Hass', criollo: 'Criollo (Antillano)', papelillo: 'Papelillo (Lorena)' };
+  document.getElementById('variedad-texto').textContent = 'Variedad seleccionada: ' + nombres[v];
+  document.getElementById('variedad-texto').style.color = 'var(--primary)';
+  document.getElementById('variedad-texto').style.fontWeight = '700';
+}
+
+function cargarImagen(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    imagenActual = ev.target.result;
+    const preview = document.getElementById('preview');
+    preview.src = imagenActual;
+    preview.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+function obtenerGPS() {
+  const txt = document.getElementById('gps-text');
+  txt.innerHTML = '⏳ Obteniendo ubicación...';
+  txt.style.color = 'var(--accent)';
+  if (!navigator.geolocation) {
+    txt.innerHTML = '❌ Tu dispositivo no soporta GPS';
+    txt.style.color = 'var(--danger)';
+    return;
+  }
+  navigator.geolocation.getCurrentPosition(
+    function(pos) {
+      gpsData = { lat: pos.coords.latitude.toFixed(6), lon: pos.coords.longitude.toFixed(6), accuracy: Math.round(pos.coords.accuracy) };
+      txt.innerHTML = `📍 ${gpsData.lat}, ${gpsData.lon} (±${gpsData.accuracy} m)`;
+      txt.style.color = 'var(--success)';
+    },
+    function() {
+      txt.innerHTML = '❌ No se pudo obtener la ubicación';
+      txt.style.color = 'var(--danger)';
+    },
+    { enableHighAccuracy: true, timeout: 12000 }
+  );
+}
+
+function guardarDiagnostico() {
+  if (!variedadSeleccionada) { alert('Selecciona la variedad del fruto'); return; }
+  if (!imagenActual) { alert('Toma o selecciona una fotografía'); return; }
+
+  const notas = document.getElementById('notas').value.trim();
+  const sesion = JSON.parse(localStorage.getItem('sesion_aguacate'));
+
+  const diagnostico = {
+    id: Date.now(),
+    variedad: variedadSeleccionada,
+    imagen: imagenActual,
+    notas: notas || 'Sin observaciones',
+    gps: gpsData,
+    fecha: new Date().toLocaleString('es-CO'),
+    usuario: sesion ? `${sesion.nombre} ${sesion.apellido}` : 'Usuario'
+  };
+
+  let galeria = JSON.parse(localStorage.getItem('galeria_aguacate') || '[]');
+  galeria.unshift(diagnostico);
+  localStorage.setItem('galeria_aguacate', JSON.stringify(galeria));
+
+  ultimaVariedadDiagnosticada = variedadSeleccionada;
+  localStorage.setItem('ultima_variedad', variedadSeleccionada);
+  actualizarHistoria(variedadSeleccionada);
+
+  variedadSeleccionada = null;
+  imagenActual = null;
+  gpsData = null;
+  document.getElementById('preview').style.display = 'none';
+  document.getElementById('notas').value = '';
+  document.getElementById('gps-text').textContent = 'Ubicación no capturada';
+  document.getElementById('gps-text').style.color = 'var(--muted)';
+  document.querySelectorAll('.var-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('variedad-texto').textContent = 'Ninguna variedad seleccionada';
+  document.getElementById('variedad-texto').style.color = 'var(--muted)';
+  document.getElementById('variedad-texto').style.fontWeight = '400';
+
+  alert('✅ Diagnóstico guardado.\nLa pestaña "Variedad" se actualizó automáticamente.');
+  cargarGaleria();
+}
+
+function actualizarHistoria(key) {
+  const data = HISTORIAS[key];
+  if (!data) return;
+
+  const plagasVar = PLAGAS.filter(p => p.variedades.includes(key));
+  const plagasHtml = plagasVar.slice(0, 6).map(p => 
+    `<li style="margin-bottom:4px"><strong>${p.nombre.split('(')[0].trim()}</strong> – ${p.categoria}</li>`
+  ).join('');
+
+  document.getElementById('contenido-historia').innerHTML = `
+    <div class="variedad-activa">
+      <div style="font-size:2rem;margin-bottom:6px">🥑</div>
+      <h3>${data.titulo}</h3>
+      <p style="color:var(--accent);font-weight:600;font-size:0.9rem">${data.subtitulo}</p>
+    </div>
+    <p style="font-size:0.9rem;margin-bottom:10px"><strong>📍 Origen:</strong> ${data.origen}</p>
+    <p style="font-size:0.9rem;margin-bottom:10px"><strong>📜 Historia en Colombia:</strong> ${data.historia}</p>
+    <p style="font-size:0.9rem;margin-bottom:10px"><strong>🌿 Características del fruto:</strong> ${data.rasgos}</p>
+    <p style="font-size:0.9rem;margin-bottom:10px"><strong>🍽️ Usos principales:</strong> ${data.usos}</p>
+    <p style="font-size:0.9rem;margin-bottom:10px"><strong>🛠️ Manejo general:</strong> ${data.manejo}</p>
+    <div style="background:#fff7ed;padding:14px;border-radius:12px;margin-top:14px">
+      <p style="font-weight:700;color:#c2410c;margin-bottom:8px">⚠️ Susceptibilidad fitosanitaria prioritaria</p>
+      <p style="font-size:0.88rem;margin-bottom:10px">${data.susceptibilidad}</p>
+      <p style="font-weight:600;font-size:0.85rem;margin-bottom:6px">Plagas y enfermedades más relevantes:</p>
+      <ul style="font-size:0.85rem;padding-left:18px">${plagasHtml}</ul>
+    </div>
+  `;
+}
+
+function cargarGaleria() {
+  const contenedor = document.getElementById('galeria-contenido');
+  let galeria = JSON.parse(localStorage.getItem('galeria_aguacate') || '[]');
+
+  const stats = { hass: 0, criollo: 0, papelillo: 0 };
+  galeria.forEach(d => { if (stats[d.variedad] !== undefined) stats[d.variedad]++; });
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat-box"><div class="num">${stats.hass}</div><div class="label">Hass</div></div>
+    <div class="stat-box"><div class="num">${stats.criollo}</div><div class="label">Criollo</div></div>
+    <div class="stat-box"><div class="num">${stats.papelillo}</div><div class="label">Papelillo</div></div>
+  `;
+
+  if (filtroActual !== 'todos') galeria = galeria.filter(d => d.variedad === filtroActual);
+
+  if (galeria.length === 0) {
+    contenedor.innerHTML = `<div class="empty-state"><span>📷</span><p>No hay diagnósticos${filtroActual !== 'todos' ? ' de esta variedad' : ''}.</p></div>`;
+    return;
+  }
+
+  const nombres = { hass: 'Hass', criollo: 'Criollo', papelillo: 'Papelillo' };
+  contenedor.innerHTML = `<div class="gallery-grid">` + galeria.map(d => `
+    <div class="gallery-item">
+      <img src="${d.imagen}" alt="Diagnóstico" onclick="verDetalle(${d.id})">
+      <div class="gallery-info">
+        <strong>${nombres[d.variedad]}</strong>
+        ${d.fecha}<br>
+        <small>${d.notas.substring(0, 35)}${d.notas.length > 35 ? '...' : ''}</small>
+        <div class="gallery-actions">
+          <button class="btn btn-sm btn-outline" onclick="verDetalle(${d.id})">Ver</button>
+          <button class="btn btn-sm btn-danger" onclick="eliminarDiagnostico(${d.id})">Eliminar</button>
+        </div>
+      </div>
+    </div>
+  `).join('') + `</div>`;
+}
+
+function filtrarGaleria(tipo) {
+  filtroActual = tipo;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  cargarGaleria();
+}
+
+function verDetalle(id) {
+  const galeria = JSON.parse(localStorage.getItem('galeria_aguacate') || '[]');
+  const d = galeria.find(x => x.id === id);
+  if (!d) return;
+  const nombres = { hass: 'Hass', criollo: 'Criollo (Antillano)', papelillo: 'Papelillo (Lorena)' };
+  document.getElementById('modal-contenido').innerHTML = `
+    <img src="${d.imagen}" alt="Diagnóstico">
+    <h3 style="color:var(--primary)">${nombres[d.variedad]}</h3>
+    <p style="font-size:0.88rem;margin-bottom:6px"><strong>Fecha:</strong> ${d.fecha}</p>
+    <p style="font-size:0.88rem;margin-bottom:6px"><strong>Usuario:</strong> ${d.usuario}</p>
+    <p style="font-size:0.88rem;margin-bottom:6px"><strong>Notas:</strong> ${d.notas}</p>
+    ${d.gps ? `<p style="font-size:0.88rem"><strong>GPS:</strong> ${d.gps.lat}, ${d.gps.lon} (±${d.gps.accuracy} m)</p>` : ''}
+  `;
+  document.getElementById('modal').classList.add('show');
+}
+
+function cerrarModal() { document.getElementById('modal').classList.remove('show'); }
+
+function eliminarDiagnostico(id) {
+  if (!confirm('¿Eliminar este diagnóstico?')) return;
+  let galeria = JSON.parse(localStorage.getItem('galeria_aguacate') || '[]');
+  galeria = galeria.filter(d => d.id !== id);
+  localStorage.setItem('galeria_aguacate', JSON.stringify(galeria));
+  cargarGaleria();
+}
+
+function cargarCatalogo() {
+  const contenedor = document.getElementById('lista-plagas');
+  contenedor.innerHTML = '';
+  PLAGAS.forEach((p, i) => {
+    const div = document.createElement('div');
+    div.className = 'plaga-item';
+    div.dataset.nombre = p.nombre.toLowerCase();
+    div.innerHTML = `
+      <div class="plaga-header" onclick="togglePlaga(${i})">
+        <div><strong>${p.nombre}</strong><br><span class="badge" style="background:${p.color}">${p.categoria}</span></div>
+        <span id="arrow-${i}">▼</span>
+      </div>
+      <div class="plaga-body" id="body-${i}">
+        <p><strong>Síntomas:</strong> ${p.sintomas}</p>
+        <p><strong>Manejo cultural:</strong> ${p.cultural}</p>
+        <p><strong>Control biológico:</strong> ${p.biologico}</p>
+        <p><strong>Control químico:</strong> ${p.quimico}</p>
+        <p><strong>Variedades afectadas:</strong> ${p.variedades.map(v => v.charAt(0).toUpperCase() + v.slice(1)).join(', ')}</p>
+      </div>`;
+    contenedor.appendChild(div);
+  });
+}
+
+function togglePlaga(i) {
+  const body = document.getElementById('body-' + i);
+  const arrow = document.getElementById('arrow-' + i);
+  if (body.style.display === 'block') { body.style.display = 'none'; arrow.textContent = '▼'; }
+  else { body.style.display = 'block'; arrow.textContent = '▲'; }
+}
+
+function filtrarCatalogo() {
+  const q = document.getElementById('buscar-plaga').value.toLowerCase();
+  document.querySelectorAll('.plaga-item').forEach(item => {
+    item.style.display = item.dataset.nombre.includes(q) ? 'block' : 'none';
+  });
+}
+
+function cargarPerfil(usuario) {
+  document.getElementById('perfil-contenido').innerHTML = `
+    <div class="profile-row"><span>Nombre</span><span>${usuario.nombre} ${usuario.apellido}</span></div>
+    <div class="profile-row"><span>Correo</span><span>${usuario.email}</span></div>
+    <div class="profile-row"><span>Teléfono</span><span>${usuario.telefono}</span></div>
+    <div class="profile-row"><span>Finca / Ubicación</span><span>${usuario.finca}</span></div>
+    <div class="profile-row"><span>Fecha de registro</span><span>${new Date(usuario.fechaRegistro).toLocaleDateString('es-CO')}</span></div>
+  `;
+}
+
+function borrarTodosDatos() {
+  if (!confirm('¿Estás seguro? Se eliminarán todos los diagnósticos y se cerrará la sesión.')) return;
+  if (!confirm('Esta acción no se puede deshacer. ¿Confirmas?')) return;
+  localStorage.removeItem('galeria_aguacate');
+  localStorage.removeItem('sesion_aguacate');
+  localStorage.removeItem('ultima_variedad');
+  alert('Datos eliminados');
+  location.reload();
+}
+</script>
+</body>
+</html>
